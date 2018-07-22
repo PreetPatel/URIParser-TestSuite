@@ -7,6 +7,9 @@ URIParser-TestSuite.iml
 # Log file
 *.log
 
+# EML files
+*.eml
+
 # BlueJ files
 *.ctxt
 

@@ -4,7 +4,7 @@ JUNIT_CLASSPATH="./lib/hamcrest-core-1.3.jar:./lib/junit-4.12.jar"
 
 printf "Compiling test suite..."
 
-if ! out="$(javac -cp ./lib/good.jar:./lib/junit-4.12.jar -d bin/ 2>&1 ./src/TestURIParser.java)"; then
+if ! out="$(javac -cp ./lib/good.jar:./lib/junit-4.12.jar -d bin/ 2>&1 ./src/uriparser/TestURIParser.java)"; then
     tput setaf 1
     echo "error"
     tput sgr0

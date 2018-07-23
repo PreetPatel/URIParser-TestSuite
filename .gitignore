@@ -209,3 +209,5 @@ local.properties
 
 # Annotation Processing
 .apt_generated
+
+.vscode

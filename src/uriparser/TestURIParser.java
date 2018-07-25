@@ -15,25 +15,13 @@ public class TestURIParser {// DO NOT CHANGE THE CLASS NAME
 
     // Tests a basic http url scheme
     @Test
-    public void testWebUrlScheme() {
+    public void testRegularURI() {
         URIParser parse = new URIParser();
-        URI uri = parse.parse("htTp://www.youtube.com/watch?id=9992#player");
-        assertEquals("htTp", uri.getScheme());
-    }
+        URI uri = parse.parse("http://www.preetpatel.com/watch?id=999#player");
+        assertEquals("http", uri.getScheme());
 
-    // Tests a basic http url Authority
-    @Test
-    public void testWebUrlAuthority() {
-        URIParser parse = new URIParser();
-        URI uri = parse.parse("http://www.youtube.com/watch?id=9992#player");
-        assertEquals("www.youtube.com", uri.getAuthority());
-    }
+        assertEquals("www.preetpatel.com", uri.getAuthority());
 
-    // Tests a basic http url Path
-    @Test
-    public void testWebUrlPath() {
-        URIParser parse = new URIParser();
-        URI uri = parse.parse("http://www.youtube.com/watch?id=9992#player");
         assertEquals("/watch", uri.getPath());
     }
 
@@ -130,6 +118,135 @@ public class TestURIParser {// DO NOT CHANGE THE CLASS NAME
             assertEquals( lol +"fragment", uri.getFragment());
         }
     }
+
+    //------------------------Testing Blank URI------------------------------------//
+
+    @Test
+    public void testBlankURIScheme() {
+        URI uri = new URIParser().parse("");
+        assertEquals( null, uri.getScheme());
+    }
+
+    @Test
+    public void testBlankURISAuthority() {
+        URI uri = new URIParser().parse("");
+        assertEquals( null, uri.getAuthority());
+    }
+
+    @Test
+    public void testBlankURIPath() {
+        URI uri = new URIParser().parse("");
+        assertEquals( null, uri.getPath());
+    }
+
+    @Test
+    public void testBlankURIQuery() {
+        URI uri = new URIParser().parse("");
+        assertEquals( null, uri.getQuery());
+    }
+
+    @Test
+    public void testBlankURIFragment() {
+            URI uri = new URIParser().parse("");
+            assertEquals( null, uri.getFragment());
+    }
+
+    //------------------------------------------------------------------//
+
+    //------------------------Testing Blank URI------------------------------------//
+
+    @Test
+    public void test20URIScheme() {
+        URI uri = new URIParser().parse("%20hi:www.preet.com");
+        assertEquals( "%20hi", uri.getScheme());
+    }
+
+    @Test
+    public void test20URISAuthority() {
+        URI uri = new URIParser().parse("http://%20hi.com");
+        assertEquals( "%20hi.com", uri.getAuthority());
+    }
+
+    @Test
+    public void test20URIPath() {
+        URI uri = new URIParser().parse("/%20hi");
+        assertEquals( "/%20hi", uri.getPath());
+    }
+
+    @Test
+    public void test20URIQuery() {
+        URI uri = new URIParser().parse("?%20hi");
+        assertEquals( "%20hi", uri.getQuery());
+    }
+
+    @Test
+    public void test20URIFragment() {
+        URI uri = new URIParser().parse("#%20hi");
+        assertEquals( "%20hi", uri.getFragment());
+    }
+
+    //------------------------------------------------------------------//
+
+    //-------------------Test Full Acceptance Range---------------------//
+    @Test
+    public void testFullSchemeRange() {
+        URI uri = new URIParser().parse("h.t-t+p://hi.com:2000/cpanel");
+        assertEquals( "h.t-t+p", uri.getScheme());
+    }
+
+    @Test
+    public void testFullAuthorityRange() {
+        URI uri = new URIParser().parse("http://hi@preetpatel.com:2000/cpanel");
+        assertEquals( "hi@preetpatel.com:2000", uri.getAuthority());
+    }
+
+    @Test
+    public void testFullPathRange() {
+        URI uri = new URIParser().parse("mailto:iam@preetpatel.com");
+        assertEquals( "iam@preetpatel.com", uri.getPath());
+    }
+
+    @Test
+    public void testMailToPathRange() {
+        URI uri = new URIParser().parse("mailto:iam@preet.patel.com");
+        assertEquals( "iam@preet.patel.com", uri.getPath());
+    }
+
+    //-------------------------Testing Blank URI Parts--------------//
+
+    @Test
+    public void testBlankAuthority() {
+        URI uri = new URIParser().parse("http://");
+        assertEquals( "", uri.getAuthority());
+    }
+
+    @Test
+    public void testBlankPath() {
+        URI uri = new URIParser().parse("mailto://preetpatel.com/");
+        assertEquals( "/", uri.getPath());
+    }
+
+    @Test
+    public void testBlankQuery() {
+        URI uri = new URIParser().parse("mailto://preetpatel.com/get?");
+        assertEquals( "", uri.getQuery());
+    }
+
+    @Test
+    public void testBlankFragment() {
+        URI uri = new URIParser().parse("mailto://preetpatel.com#");
+        assertEquals( "", uri.getFragment());
+    }
+
+
+    @Test
+    public void testpathragment() {
+        URI uri = new URIParser().parse("scheme:/");
+        assertEquals( "/", uri.getPath());
+    }
+
+
+
 
 
 }

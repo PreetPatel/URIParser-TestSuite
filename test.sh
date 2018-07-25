@@ -61,4 +61,10 @@ tput bold
 echo "[$good_passed/$good_count] good jars passed all tests"
 echo "[$bad_passed/$bad_count] bad jars failed at least one test"
 tput sgr0
+
+for jar in lib/bad*.jar; do
+    printf "Testing $jar..."
+    java -cp "$JUNIT_CLASSPATH":"$jar":bin/ org.junit.runner.JUnitCore uriparser.TestURIParser;
+done 
+
 exit $exit_code

@@ -45,7 +45,7 @@ public class TestURIParser {// DO NOT CHANGE THE CLASS NAME
     public void testNullInput() {
         try {
             new URIParser().parse(null);
-            fail();
+            fail("URI Recieved was null");
         }
         catch(ParseException e) {
             //Nothing to do here
@@ -245,6 +245,11 @@ public class TestURIParser {// DO NOT CHANGE THE CLASS NAME
         assertEquals( "/", uri.getPath());
     }
 
+    @Test
+    public void testpathrgment() {
+        URI uri = new URIParser().parse("scheme://authority/path?#query");
+        assertEquals( "", uri.getQuery());
+    }
 
 
 

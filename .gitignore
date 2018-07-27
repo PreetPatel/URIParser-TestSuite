@@ -1,6 +1,10 @@
 .idea/
 URIParser-TestSuite.iml
 
+#Decompile Libraries
+lib/
+decompiled/
+
 # Compiled class file
 *.class
 

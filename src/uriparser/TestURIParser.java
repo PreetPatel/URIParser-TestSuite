@@ -14,24 +14,18 @@ import static org.junit.Assert.fail;
 
 public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
 
+    //-----------------------------------------Test All Permutations of Scheme----------------------------------------//
+
     /**
-     * Tests the scheme only without any other parts.
+     * Tests the scheme only without any other parts to ensure that the correct result is parsed.
      */
     @Test(timeout=5000)
     public void testURISchemeOnly() {
         assertEquals("scheme", new URIParser().parse("scheme:").getScheme());
     }
-    
-    /**
-     * Tests the full range of acceptable characters in the scheme part 
-     */
-    @Test(timeout=5000) 
-    public void testURILegalCharsScheme() {
-        assertEquals("scheme.-+", new URIParser().parse("scheme.-+:").getScheme());
-    }
 
     /**
-     * Tests placing the / (path) character before the scheme is complete
+     * Tests placing the / (path) character before the scheme is complete as / before : makes the scheme invalid
      */
     @Test(timeout=5000) 
     public void testURIPathScheme() {
@@ -39,7 +33,7 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     * Tests placing the ? (query) character before the scheme is complete
+     * Tests placing the ? (query) character before the scheme is complete as ? before : makes the scheme invalid
      */
     @Test(timeout=5000) 
     public void testURIQueryScheme() {
@@ -47,7 +41,7 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     * Tests placing the # (Fragment) character before the scheme is complete
+     * Tests placing the # (Fragment) character before the scheme is complete as ? before : makes the scheme invalid
      */
     @Test(timeout=5000) 
     public void testURIFragmentScheme() {
@@ -55,17 +49,17 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     * Tests getting the scheme with double ':'s
+     * Tests getting the scheme with double ':'s as a scheme cannot contain ':'
      */
     @Test(timeout=5000) 
     public void testURIDoubleSchemeColons() {
         assertEquals("scheme", new URIParser().parse("scheme::").getScheme());
     }
 
-    //---------------------------------------------------------------------------------------------------------//
+    //--------------------------------------Test All Permutations of Authority----------------------------------------//
     
     /**
-     * Tests an only scheme and authority legal URI to get Authority  
+     * Tests an only scheme and authority legal URI to get Authority to see if the parser reports the correct authority
      */
     @Test(timeout=5000)
     public void testURITrueSchemeAuthority() {
@@ -73,7 +67,7 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     * Tests only the legal authority part of URI to get Authority 
+     * Tests only the legal authority part of URI to get Authority as // is not part of the authority
      */
     @Test(timeout=5000)
     public void TestOnlyAuthority () {
@@ -81,7 +75,7 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     * Tests empty authority and path URI to get Authority
+     * Tests empty authority and path URI to get Authority as a single slash '/' is not part of the authority
      */
     @Test(timeout=5000)
     public void testURIiBlankAuthorityWithPath() {
@@ -89,7 +83,8 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests blank authority URI to get Authority
+     * Tests blank authority URI to get Authority to ensure the parser recognises the input as the authority but with no
+     * strings with it
      */
     @Test(timeout=5000)
     public void testURIAuthorityWithNoString() {
@@ -97,7 +92,8 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests an authority part with a ? (query) character in the URI to get Authority 
+     * Tests an authority part with a ? (query) character in the URI to get Authority  as the ? character is illegal in
+     * the authority
      */
     @Test(timeout=5000)
     public void testURIAuthorityWithQuery() {
@@ -105,7 +101,8 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests an authority part with a # (fragment) character in the URI to get Authority
+     * Tests an authority part with a # (fragment) character in the URI to get Authority as the # character is illegal
+     * in the authority
      */
     @Test(timeout=5000)
     public void testURIAuthorityWithFragment() {
@@ -113,10 +110,10 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
 
-    //----------------------------------------------------------------------------------------//
+    //-----------------------------------------Test All Permutations of Path------------------------------------------//
 
     /**
-     *Tests a valid path only URI to get the path
+     *Tests a valid path only URI to get the path to ensure the parser reports the correct result for a valid path
      */
     @Test(timeout=5000)
     public void testURIOnlyPath() {
@@ -124,7 +121,7 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests a valid double path only URI to get the path
+     *Tests a valid double path only URI to get the path as the parser could misinterpret the second / as not a path
      */
     @Test(timeout=5000)
     public void testURIOnlyPathDouble() {
@@ -132,11 +129,17 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     * Tests a single string without special characters to get the path
+     * Tests a single string without special characters to get the path. This tests if the parser returns the string as
+     * the path and not any other part that 'requires' special characters to be valid
      */
     @Test(timeout=5000)
-    public void testURIPathJustString() {
-        assertEquals("path", new URIParser().parse("path").getPath());
+    public void testURIPathStringWithoutAnySpecialCharacters() {
+        URI uri = new URIParser().parse("path");
+        assertEquals("path", uri.getPath());
+        assertNull(uri.getScheme());
+        assertNull(uri.getAuthority());
+        assertNull(uri.getQuery());
+        assertNull(uri.getFragment());
     }
 
     /**
@@ -148,7 +151,8 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests placing the ? (query) character before the scheme is complete
+     * Tests placing the ? (query) character after the path is complete to ensure it is not recognised as being in the
+     * path by the parser
      */
     @Test(timeout=5000)
     public void testURIPathWithQuery() {
@@ -156,7 +160,8 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests placing the ? (query) character before the scheme is complete
+     * Tests placing the # (fragment) character after the path is complete to ensure it is not recognised as being in the
+     * path by the parser
      */
     @Test(timeout=5000)
     public void testURIPathWithFragment() {
@@ -164,7 +169,7 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests placing the ? (query) character before the scheme is complete
+     * Tests a path containing a : (scheme) character to ensure the path is not recognised as a scheme by the parser
      */
     @Test(timeout=5000)
     public void testURIPathContainingSchemeChar() {
@@ -172,7 +177,7 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests placing the ? (query) character before the scheme is complete
+     * Tests if the transition from scheme to path is picked up correctly by the parser
      */
     @Test(timeout=5000)
     public void testURISchemePath() {
@@ -180,18 +185,18 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests placing the ? (query) character before the scheme is complete
+     * Tests if the transition from authority to path is picked up correctly by the parser
      */
     @Test(timeout=5000)
     public void testURIAuthorityPath() {
         assertEquals("/path", new URIParser().parse("//authority/path").getPath());
     }
 
-    //---------------------------------------------------------------------------------------//
+    //-----------------------------------------Test All Permutations of Query-----------------------------------------//
     // Test All Permutations of Query
 
     /**
-     *Tests placing the ? (query) character before the scheme is complete
+     * Tests an isolated query part from a URI to ensure the parser can accurately recognise the query
      */
     @Test(timeout=5000)
     public void testURIJustQuery() {
@@ -199,7 +204,7 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests placing the ? (query) character before the scheme is complete
+     * Tests just the query character '?' to ensure that the parser picks it up as a query and reports an empty string
      */
     @Test(timeout=5000)
     public void testURIQueryCharOnly() {
@@ -207,7 +212,7 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests placing the ? (query) character before the scheme is complete
+     * Tests the transition from scheme to query as ':' is not part of the query
      */
     @Test(timeout=5000)
     public void testURISchemeQuery() {
@@ -215,15 +220,15 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests placing the ? (query) character before the scheme is complete
+     * Tests the transition from the authority to query as '//' is not part of the query
      */
     @Test(timeout=5000)
     public void testURIAuthorityQuery() {
-        assertEquals("query", new URIParser().parse("//authority?query").getQuery());
+        assertEquals("query", new URIParser().parse("//?query").getQuery());
     }
 
     /**
-     *Tests placing the ? (query) character before the scheme is complete
+     * Tests the transition from path to query is picked up correctly by the parser
      */
     @Test(timeout=5000)
     public void testURIPathWithAdditionalSlashQuery() {
@@ -231,18 +236,25 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests placing the ? (query) character before the scheme is complete
+     * Tests the '/' character in the query part as it could have been misinterpreted as a path by the parser
+     */
+    @Test(timeout=5000)
+    public void testURIWithSlashQuery() {
+        assertEquals("/query", new URIParser().parse("?/query").getQuery());
+    }
+
+    /**
+     * Tests the transition of URI from path to query is picked up correctly by the parser
      */
     @Test(timeout=5000)
     public void testURIPathQuery() {
         assertEquals("query", new URIParser().parse("/path?query").getQuery());
     }
 
-    //----------------------------------------------------------------------------------------------//
-    // Test All Permutations of Fragment
+    //---------------------------------------Test All Permutations of Fragment----------------------------------------//
 
     /**
-     *Tests placing the ? (query) character before the scheme is complete
+     * Tests an isolated fragment part from a URI to ensure the parser can accurately recognise the fragment
      */
     @Test(timeout=5000)
     public void testURIOnlyFragment() {
@@ -250,7 +262,8 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests placing the ? (query) character before the scheme is complete
+     * Tests placing the ? (query) character inside the fragment part as the parser may recognise it as a query by
+     * mistake
      */
     @Test(timeout=5000)
     public void testURIFragmentWithQueryChar() {
@@ -258,7 +271,8 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests placing the ? (query) character before the scheme is complete
+     * Tests placing the # (fragment) character on its own to ensure it is picked up by the parser as a fragment but
+     * the string is reported as empty
      */
     @Test(timeout=5000)
     public void testURIFragmentCharOnly() {
@@ -266,7 +280,7 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests placing the ? (query) character before the scheme is complete
+     * Tests if the transition from the scheme to fragment is picked up correctly by the parser
      */
     @Test(timeout=5000)
     public void testURISchemeAndFragment() {
@@ -274,7 +288,7 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests placing the ? (query) character before the scheme is complete
+     * Tests if the transition from the authority to fragment is picked up correctly by the parser
      */
     @Test(timeout=5000)
     public void testURIAuthorityAndFragment() {
@@ -282,7 +296,15 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests placing the ? (query) character before the scheme is complete
+     * Tests if the transition from the authority without text to fragment is picked up correctly by the parser
+     */
+    @Test(timeout=5000)
+    public void testURIAuthorityWithoutTextAndFragment() {
+        assertEquals("fragment", new URIParser().parse("//#fragment").getFragment());
+    }
+
+    /**
+     * Tests if the transition from the path to fragment is picked up correctly by the parser
      */
     @Test(timeout=5000)
     public void testURIPathWithSlashFragment() {
@@ -290,7 +312,7 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests placing the ? (query) character before the scheme is complete
+     * Tests if the transition from the path to fragment is picked up correctly by the parser
      */
     @Test(timeout=5000)
     public void testURIPathWithoutSlashFragment() {
@@ -298,7 +320,7 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests placing the ? (query) character before the scheme is complete
+     * Tests if the transition from the query to fragment is picked up correctly by the parser
      */
     @Test(timeout=5000)
     public void testURIQueryAndFragment() {
@@ -306,13 +328,15 @@ public class TestURIParser { // DO NOT CHANGE THE CLASS NAME
     }
 
     /**
-     *Tests placing the ? (query) character before the scheme is complete
+     * Tests if the transition from the query without text to fragment is picked up correctly by the parser and not
+     * confused as a query
      */
     @Test(timeout=5000)
     public void testURIBlankQueryAndFragment() {
         assertEquals("fragment", new URIParser().parse("?#fragment").getFragment());
     }
 
+    //--------------------------------------Test Parse Exceptions and extreme cases-----------------------------------//
 
     /**
      * Tests a null string to ensure it is considered illegal by the parser and the ParseException is thrown
